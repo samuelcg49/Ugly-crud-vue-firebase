@@ -25,14 +25,15 @@ export default {
       password: "",
     };
   },
-  methos: {
+  methods: {
     async signUp() {
       await auth
         .createUserWithEmailAndPassword(this.email, this.password)
-        .then((usercredential) => {
-          console.log(usercredential.user);
+        .then(() => {
+          auth.currentUser.sendEmailVerification();
           this.email = "";
           this.password = "";
+          console.log("Email de verificación enviado");
         })
         .catch((error) => console.log(error));
     },
