@@ -3,6 +3,9 @@
     HOLA, soy el dashboard
     <button @click="getContactos">Ver contactos</button>
     <br />
+    <div v-if="mensaje" class="mensaje">
+      <h4>{{ mensaje }}</h4>
+    </div>
     <br />
     <ul v-for="contacto in resultado" :key="contacto.id">
       <li><b>Nombre:</b> {{ contacto.nombre }}</li>
@@ -62,6 +65,7 @@ export default {
       idUpdateContacto: "",
       fotoData: "",
       foto: "",
+      mensaje: "",
     };
   },
   methods: {
@@ -95,7 +99,7 @@ export default {
           usuarioID: this.user.uid,
           foto: this.foto,
         })
-        .then(() => console.log("Contacto agregado con éxito"))
+        .then(() => (this.mensaje = "Contacto agregado correctamente"))
         .catch((err) => console.log(err.message));
     },
     async deleteContacto(id) {
@@ -104,6 +108,7 @@ export default {
         .where("usuarioID", "==", this.user.uid)
         .get()
         .then((res) => {
+          this.mensaje = "Contacto borrado correctamente";
           res.forEach((doc) => {
             if (doc.ref.id == id) {
               doc.ref.delete();
@@ -120,6 +125,7 @@ export default {
         .where("usuarioID", "==", this.user.uid)
         .get()
         .then((res) => {
+          this.mensaje = "Contacto acualizado correctamente";
           res.forEach((doc) => {
             if (doc.ref.id == id) {
               doc.ref.update({
@@ -140,9 +146,14 @@ export default {
     },
     async subirFoto() {
       //busca el último . que es desde donde parte la extension, esto evita descargar fotos sin extensión por tener el nombre varios puntos
+      if (!this.fotoData) {
+        return (this.fotoData = ""); //Si la foto viene vacía lo retorna vacío y se sale de la función
+      }
       const lastDot = this.fotoData.name.lastIndexOf(".");
       const ext = this.fotoData.name.substring(lastDot + 1);
-      const fotoName = Math.random().toString(36).slice(2);
+      const fotoName = Math.random()
+        .toString(36)
+        .slice(2);
 
       await storage
         .ref()
@@ -166,5 +177,12 @@ export default {
 }
 img {
   width: 150px;
+}
+.mensaje {
+  color: green;
+  background: rgb(125, 245, 125);
+  padding: 10px;
+  width: 50%;
+  margin: 0px auto;
 }
 </style>

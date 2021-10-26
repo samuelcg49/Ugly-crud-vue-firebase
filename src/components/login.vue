@@ -1,6 +1,16 @@
 <template>
   <div id="login">
     <br />
+    <div v-if="mensaje" class="mensaje">
+      <h4>{{ mensaje }}</h4>
+    </div>
+    <div v-else>
+      <h4>
+        Por favor, antes de iniciar sesión asegurese que su cuenta ha sido
+        verificada
+      </h4>
+    </div>
+    <br />
     <form @submit.prevent="login">
       <label for="email">Correo electrónico</label>
       <input type="email" v-model="email" />
@@ -27,6 +37,7 @@ export default {
       email: "",
       password: "",
       correo: "",
+      mensaje: "",
     };
   },
   methods: {
@@ -36,17 +47,17 @@ export default {
         .then(() => {
           if (!auth.currentUser.emailVerified) {
             auth.signOut();
-            console.log("Por favor revisa tu correo electrónico");
           } else {
             this.$router.replace("inicio");
           }
         })
-        .catch((error) => console.log(error));
+        .catch((error) => (this.mensaje = error.message));
     },
     resetPassword() {
       auth
         .sendPasswordResetEmail(this.correo)
         .then(() => {
+          this.mensaje = "Se ha enviado un correo para resetar la contraseña";
           console.log("Se ha enviado un correo para resetar la contraseña");
         })
         .catch((error) => {
@@ -61,5 +72,12 @@ export default {
 a {
   cursor: pointer;
   color: blue;
+}
+.mensaje {
+  color: black;
+  background: rgb(245, 243, 125);
+  padding: 20px;
+  width: 50%;
+  margin: 0px auto;
 }
 </style>

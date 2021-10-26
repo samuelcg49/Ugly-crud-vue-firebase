@@ -1,6 +1,10 @@
 <template>
   <div id="signup">
     <br />
+    <div>
+      <h4>Al registrarse deberá revisar su email para verificar la cuenta</h4>
+    </div>
+    <br />
     <form @submit.prevent="signUp">
       <label for="email">Correo electrónico</label>
       <input type="email" v-model="email" />
@@ -33,7 +37,6 @@ export default {
           auth.currentUser.sendEmailVerification();
           this.email = "";
           this.password = "";
-          console.log("Email de verificación enviado");
         })
         .catch((error) => console.log(error));
     },
@@ -41,4 +44,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.mensaje {
+  color: green;
+  background: rgb(125, 245, 125);
+  padding: 20px;
+  width: 50%;
+  margin: 0px auto;
+}
+</style>

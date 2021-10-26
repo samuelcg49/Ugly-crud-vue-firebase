@@ -12,9 +12,7 @@ auth.onAuthStateChanged((user) => {
     render: h => h(App),
   }).$mount('#app')
 
-  if (user) {
-    console.log(user)
-  } else {
+  if (!user) {
     console.log("No hay usuario logueado")
   }
 })
